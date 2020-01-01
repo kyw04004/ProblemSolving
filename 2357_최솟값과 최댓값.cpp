@@ -6,39 +6,32 @@
 #include<vector>
 #include<cmath>
 using namespace std;
-int h,n,m,k,Min=1e9,Max;
-vector<int> tree1;
-vector<int> tree2;
+int h, n, m, k, Min = 1e9, Max;
+vector<pair<int, int>> tree;
 int arr[100001];
-void query1(int left, int right)
+void query(int left, int right)
 {
 	left += h;
 	right += h;
-	Min = 1e9;
-	for (;left < right; left /= 2, right /= 2)
-	{
-		if (left % 2)
-			Min = min(Min, tree1[left++]);
-		if (!(right % 2))
-			Min = min(Min, tree1[right--]);
-	}
-	if (left == right)
-		Min = min(Min, tree1[left]);
-}
-void query2(int left, int right)
-{
-	left += h;
-	right += h;
-	Max = 0;
+	Min = 1e9, Max = 0;
 	for (; left < right; left /= 2, right /= 2)
 	{
 		if (left % 2)
-			Max = max(Max, tree2[left++]);
+		{
+			Min = min(Min, tree[left].first);
+			Max = max(Max, tree[left++].second);
+		}
 		if (!(right % 2))
-			Max = max(Max, tree2[right--]);
+		{
+			Min = min(Min, tree[right].first);
+			Max = max(Max, tree[right--].second);
+		}
 	}
 	if (left == right)
-		Max = max(Max, tree2[left]);
+	{
+		Min = min(Min, tree[left].first);
+		Max = max(Max, tree[left].second);
+	}
 }
 int main()
 {
@@ -46,29 +39,24 @@ int main()
 	for (int i = 0; i < n; i++)
 		scanf("%d", &arr[i]);
 	h = (1 << (int)log2(n - 1) + 1);
-	tree1.resize(h * 2 + 1);
-	tree2.resize(h * 2 + 1);
+	tree.resize(h * 2 + 1);
 	for (int i = 0; i < h * 2 + 1; i++)
-	{
-		tree1.push_back(1e9);
-		tree2.push_back(0);
-	}
+		tree.push_back({ 1e9,-1 });
 	for (int i = h; i < h + n; i++)
 	{
-		tree1[i] = arr[i - h];
-		tree2[i]= arr[i - h];
+		tree[i].first = arr[i - h];
+		tree[i].second = arr[i - h];
 	}
 	for (int i = h - 1; i > 0; i--)
 	{
-		tree1[i] = min(tree1[i * 2], tree1[i * 2 + 1]);
-		tree2[i] = max(tree2[i * 2], tree2[i * 2 + 1]);
+		tree[i].first = min(tree[i * 2].first, tree[i * 2 + 1].first);
+		tree[i].second = max(tree[i * 2].second, tree[i * 2 + 1].second);
 	}
 	for (int i = 0; i < m; i++)
 	{
 		int a, b;
 		scanf("%d %d", &a, &b);
-		query1(a-1, b-1);
-		query2(a - 1, b - 1);
+		query(a - 1, b - 1);
 		printf("%d %d\n", Min, Max);
 	}
 	return 0;
