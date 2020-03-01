@@ -10,7 +10,7 @@
 using namespace std;
 int arr[1001][4];
 int dp[1001][4];
-int n, Min = 1e9;
+int n, Min = 1e6;
 int main()
 {
 	scanf("%d", &n);
@@ -24,7 +24,7 @@ int main()
 			if (k == i)
 				dp[1][i] = arr[1][i];
 			else
-				dp[1][i] = 1e9;
+				dp[1][i] = 1001;
 		}
 
 		for (int i = 2; i <= n; i++)
