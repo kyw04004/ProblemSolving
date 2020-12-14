@@ -14,21 +14,19 @@
 using namespace std;
 typedef long long ll;
 int n, ing[16][6];
-int mp, mf, ms, mu,Min=1e4;
-int ans, com;
-pair<int, int> p = { 32768,15 };
+int mp, mf, ms, mu, Min = 1e4, com;
 vector<int> pr;
-void go(int depth, int p, int f, int s, int u, int sum) {
+vector<pair<int,string>> ans;
+void go(int depth, int p, int f, int s, int u, int sum,string str) {
 	if (depth > n) {
-		if (p >= mp && f >= mf && s >= ms && u >= mu && Min > sum)
-			Min = sum, ans=com;
+		if (p >= mp && f >= mf && s >= ms && u >= mu && Min >= sum)
+			Min = sum, ans.push_back({ sum,str });
 		return;
 	}
-	com += (1 << depth);
+	char c = 'a' + depth;
 	go(depth + 1, p + ing[depth][1], f + ing[depth][2]
-		, s + ing[depth][3], u + ing[depth][4], sum + ing[depth][5]);
-	com -= (1 << depth);
-	go(depth + 1, p, f, s, u, sum);
+		, s + ing[depth][3], u + ing[depth][4], sum + ing[depth][5], str + c );
+	go(depth + 1, p, f, s, u, sum, str);
 }
 int main() {
 	cin >> n;
@@ -36,19 +34,15 @@ int main() {
 	for (int i = 1; i <= n; i++)
 		for (int j = 1; j <= 5; j++)
 			cin >> ing[i][j];
-	go(1, 0, 0, 0, 0, 0);
+	go(1, 0, 0, 0, 0, 0,"");
+	sort(ans.begin(), ans.end());
 	if (Min == 1e4) printf("-1\n");
 	else {
 		printf("%d\n", Min);
-		while (p.first > 1) {
-			if (ans >= p.first) {
-				ans -= p.first;
-				pr.push_back(p.second);
-			}
-			p.first /= 2;
-			p.second--;
+		for (int i = 0; i < ans[0].second.size(); i++) {
+			pr.push_back(ans[0].second[i]-'a');
 		}
-		sort(pr.begin(),pr.end());
+		sort(pr.begin(), pr.end());
 		for (int i = 0; i < pr.size(); i++)
 			printf("%d ", pr[i]);
 	}
