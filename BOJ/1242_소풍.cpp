@@ -9,23 +9,22 @@
 #include<functional>
 #include<stack>
 using namespace std;
-int main()
-{
-	int n, m, k, t;
+int main() {
+	int n, m, k, point = 0, ans = 1;
 	scanf("%d %d %d", &n, &m, &k);
-	for(int i=n;i>0;i--)
+	while (1)
 	{
-		t = m % i;
-		if (t == 0)
-			t = i;
-		k -= t;
-		if (k == 0)
-		{
-			printf("%d", n - i + 1);
+		point += m;
+		while (point > n)
+			point -= n;
+		if (point == k)
 			break;
-		}
-		if (k < 0)
-			k += i;
+		if (point < k)
+			k--;
+		n--;
+		point--;
+		ans++;
 	}
+	printf("%d", ans);
 	return 0;
 }
