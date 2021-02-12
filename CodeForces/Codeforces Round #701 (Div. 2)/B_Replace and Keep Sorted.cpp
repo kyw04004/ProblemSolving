@@ -11,7 +11,7 @@
 #include<bitset>
 using namespace std;
 typedef long long ll;
-int n, q, k, arr[100005],dif[100005],sum[100005];
+int n, q, k, arr[100005],dif[100005], ans,sum[100005];
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
@@ -29,6 +29,10 @@ int main() {
 	for (int i = 0; i < q; i++) {
 		int ans = 0;
 		int a, b; cin >> a >> b;
+		if (n == 1) {
+			cout << k - 1 << '\n';
+			continue;
+		}
 		ans = sum[b - 1] - sum[a];
 		ans += (k + 1 - arr[b - 1] - 2);
 		ans += (arr[a + 1] - arr[0] - 2);
