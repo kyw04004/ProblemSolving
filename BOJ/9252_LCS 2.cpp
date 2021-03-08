@@ -1,4 +1,3 @@
-//Longest common Subsequence
 #include<iostream>
 #include<cstring>
 #include<string>
@@ -12,33 +11,32 @@
 #include<bitset>
 using namespace std;
 typedef long long ll;
-string a, b;
-pair<int,string> dp[1005][1005];
+int dp[1005][1005];
+stack<char> s;
 int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 	ios_base::sync_with_stdio(false);
+	string a, b;
 	cin >> a >> b;
-	int ai = a.size();
-	int bi = b.size();
-	for (int i = 1; i <= a.size(); i++)
-		for (int j = 1; j <= b.size(); j++) {
-			if (a[i - 1] == b[j - 1]) {
-				dp[i][j].first = dp[i - 1][j - 1].first + 1;
-				dp[i][j].second = dp[i - 1][j - 1].second + a[i-1];
-			}
-			else {
-				if (dp[i][j - 1] < dp[i - 1][j]) {
-					dp[i][j].first = dp[i - 1][j].first;
-					dp[i][j].second = dp[i - 1][j].second;
-				}
-				else {
-					dp[i][j].first = dp[i][j-1].first;
-					dp[i][j].second = dp[i][j-1].second;
-				}
-			}
+	int alen = a.size(), blen = b.size();
+	for (int i = 1; i <= alen; i++)
+		for (int j = 1; j <= blen; j++) {
+			if (a[i - 1] == b[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;
+			else dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
 		}
-	cout << dp[ai][bi].first << '\n';
-	cout << dp[ai][bi].second;
+	cout << dp[alen][blen] << '\n';
+	while (dp[alen][blen]) {
+		if (dp[alen][blen] == dp[alen - 1][blen]) alen -= 1;
+		else if (dp[alen][blen] == dp[alen][blen - 1]) blen -= 1;
+		else {
+			s.push(a[alen-1]);
+			alen -= 1, blen -= 1;
+		}
+	}
+	while (!s.empty()) {
+		cout << s.top();
+		s.pop();
+	}
 	return 0;
 }
