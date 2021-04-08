@@ -2,24 +2,34 @@
 #include<cstring>
 #include<string>
 #include<algorithm>
+#include<map>
+#include<vector>
+#include<queue>
+#include<functional>
 using namespace std;
-pair<int, int> arr[1000001];
-int main()
-{
-	int n,sum=0;
+typedef long long ll;
+typedef pair<int, int> p;
+int n, sum;
+p dot[1000005];
+int main() {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
 	cin >> n;
-	for (int i = 0; i < n; i++)
-		scanf("%d %d", &arr[i].first, &arr[i].second);
-	sort(arr, arr + n);
-	int right = -1e9-1;
-	for (int i = 0; i < n; i++)
-	{
-		if (right < arr[i].first)
-			sum += (arr[i].second-arr[i].first);
-		else if (right < arr[i].second)
-			sum += (arr[i].second - right);
-		right = max(right, arr[i].second);
+	for (int i = 1; i <= n; i++)
+		cin >> dot[i].first >> dot[i].second;
+	sort(dot + 1, dot + n + 1);
+	int left = dot[1].first, right = dot[1].second;
+	for (int i = 2; i <= n; i++) {
+		if (right < dot[i].first) {
+			sum += (right - left);
+			left = dot[i].first;
+			right = dot[i].second;
+		}
+		else if(right < dot[i].second)
+			right = dot[i].second;
 	}
-	printf("%d", sum);
+	sum += (right - left);
+	cout << sum;
 	return 0;
 }
