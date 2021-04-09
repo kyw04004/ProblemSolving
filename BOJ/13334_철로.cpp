@@ -3,36 +3,40 @@
 #include<string>
 #include<algorithm>
 #include<map>
-#include<vector>
 #include<queue>
 #include<functional>
+#include<vector>
 using namespace std;
 typedef long long ll;
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-priority_queue<int, vector<int>, greater<int>> cnt;
-int ans;
+typedef pair<int, int> p;
+priority_queue<p, vector<p>, greater<p>> pq;
+priority_queue<int, vector<int>, greater<int>> com;
+int N, D, Max;
 int main() {
-	int n, len;
-	cin >> n;
-	for (int i = 1; i <= n; i++) {
-		int a, b;
-		cin >> a >> b;
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> N;
+	for (int i = 1; i <= N; i++) {
+		int a, b; cin >> a >> b;
 		pq.push({max(a,b), min(a,b)});
 	}
-	cin >> len;
+	cin >> D;
 	while (!pq.empty()) {
-		int com = pq.top().first;
-		cnt.push(pq.top().second);
+		int s = pq.top().second;
+		int e = pq.top().first;
 		pq.pop();
-		while (!cnt.empty()) {
-			if (cnt.top() < com - len) cnt.pop();
-			else {
-				int l = cnt.size();
-				ans = max(ans, l);
+		if (e - s > D) continue;
+		com.push(s);
+		while (!com.empty()) {
+			if (com.top() + D >= e) {
+				int cnt = com.size();
+				Max = max(Max, cnt);
 				break;
 			}
+			else com.pop();
 		}
 	}
-	cout << ans;
+	cout << Max;
 	return 0;
 }
