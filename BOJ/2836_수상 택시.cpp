@@ -2,39 +2,41 @@
 #include<cstring>
 #include<string>
 #include<algorithm>
-#include<functional>
+#include<map>
 #include<queue>
+#include<functional>
+#include<vector>
 using namespace std;
-typedef pair<int, int> P;
 typedef long long ll;
-priority_queue<P, vector<P>, greater<P>> pq;
-int main()
-{
-	int n, m;
+typedef pair<ll, ll> p;
+ll n, m;
+p dot[100005];
+vector<p> v;
+int main() {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
 	cin >> n >> m;
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		int a, b;
 		cin >> a >> b;
-		if (a > b) pq.push({ -a,-b });
+		if (a > b) v.push_back({-a, -b});
 	}
-	int right = pq.top().second;
-	ll sum = (ll)abs(pq.top().first - pq.top().second);
-	pq.pop();
-	while (!pq.empty())
-	{
-		if (right <= pq.top().first)
-		{
-			sum += (ll)abs(pq.top().first - pq.top().second);
-			right = pq.top().second;
+	if (v.size() == 0) cout << m;
+	else {
+		sort(v.begin(), v.end());
+		ll sum = 0;
+		ll left = v[0].first, right = v[0].second;
+		for (int i = 1; i < v.size(); i++) {
+			if (right < v[i].first) {
+				sum += (right - left);
+				left = v[i].first;
+				right = v[i].second;
+			}
+			else right = max(right, v[i].second);
 		}
-		else if (right <= pq.top().second)
-		{
-			sum += (ll)abs(pq.top().second - right);
-			right = pq.top().second;
-		}
-		pq.pop();
+		sum += (right - left);
+		cout << 2 * sum + m;
 	}
-	printf("%lld", (ll)2 * sum + m);
 	return 0;
 }
