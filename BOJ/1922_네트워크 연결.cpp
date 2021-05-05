@@ -1,54 +1,53 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<iostream>
-#include<cstring>
-#include<string>
-#include<algorithm>
-#include<functional>
-#include<queue>
-#include<vector>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <functional>
 using namespace std;
-int n, m,a,b,c,sum;
-int parent[1005];
 typedef pair<int, pair<int, int>> P;
 priority_queue<P, vector<P>, greater<P>> pq;
-int find(int n)
-{
-	if (parent[n] < 0) return n;
-	parent[n] = find(parent[n]);
-	return parent[n];
+int V, E, parent[1005],ans;
+int find(int x) {
+	if (parent[x] == x) return x;
+	return parent[x] = find(parent[x]);
 }
-void merge(int a, int b, int c)
-{
-	a = find(a);
-	b = find(b);
-	if (a == b) return;
-	parent[b] = a;
-	sum += c;
+void merge(int x, int y) {
+	x = find(x);
+	y = find(y);
+	if (x == y) return;
+	parent[y] = x;
 }
-void kruskal()
-{
-	while (!pq.empty())
-	{
-		int cost = pq.top().first;
-		int to = pq.top().second.first;
-		int from = pq.top().second.second;
+bool isUnion(int x, int y) {
+	x = find(x);
+	y = find(y);
+	if (x == y) return true;
+	else return false;
+}
+void kruskal() {
+	while (!pq.empty()) {
+		int x = pq.top().second.first, y = pq.top().second.second;
+		if (!isUnion(x, y)) {
+			merge(x, y);
+			ans += pq.top().first;
+		}
 		pq.pop();
-		merge(to, from, cost);
 	}
 }
-int main()
-{
-	cin >> n >> m;
-	for (int i = 1; i <= n; i++)
-		parent[i] = -1;
-	for (int i = 1; i <= m; i++)
-	{
-		cin >> a >> b >> c;
-		pq.push({ c,{a,b} });
+int main() {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> V >> E;
+	for (int i = 1; i <= V; i++) parent[i] = i;
+	for (int i = 1; i <= E; i++) {
+		int s, e, w;
+		cin >> s >> e >> w;
+		pq.push({ w, {s, e} });
 	}
 	kruskal();
-	printf("%d", sum);
+	cout << ans;
 	return 0;
 }
