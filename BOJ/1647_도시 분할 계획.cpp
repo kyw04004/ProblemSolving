@@ -1,47 +1,54 @@
-#include<stdio.h>
-#include<iostream>
-#include<cstring>
-#include<string>
-#include<functional>
-#include<queue>
-#include<vector>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <deque>
+#include <stack>
+#include <queue>
+#include <functional>
 using namespace std;
-priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-vector<vector<pair<int, int>>> v(100001);
-int V, E, a, b, c, t, sum, M;
-int chk[100001];
-void prim(int st)
-{
-	pq.push({ 0, st });
-	while (!pq.empty())
-	{
-		int here = pq.top().second;
-		int cost = pq.top().first;
-		pq.pop();
-		if (chk[here] == 1) continue;
-		chk[here] = 1;
-		sum += cost;
-		if (cost > M)
-			M = cost;
-		for (int i = 0; i < v[here].size(); i++)
-		{
-			int next = v[here][i].first;
-			int nextcost = v[here][i].second;
-			if (chk[next] == 0)
-				pq.push({ nextcost,next });
+typedef pair<int, pair<int, int>> P;
+priority_queue<P, vector<P>, greater<P>> pq;
+int V, E, parent[100005],ans, Max;
+int find(int x) {
+	if (parent[x] == x) return x;
+	return parent[x] = find(parent[x]);
+}
+void merge(int x, int y) {
+	x = find(x);
+	y = find(y);
+	if (x == y) return;
+	parent[y] = x;
+}
+bool isUnion(int x, int y) {
+	x = find(x);
+	y = find(y);
+	if (x == y) return true;
+	else return false;
+}
+void kruskal() {
+	while (!pq.empty()) {
+		int x = pq.top().second.first, y = pq.top().second.second;
+		if (!isUnion(x, y)) {
+			merge(x, y);
+			ans += pq.top().first;
+			Max = max(Max, pq.top().first);
 		}
+		pq.pop();
 	}
 }
-int main()
-{
-	scanf("%d%d", &V, &E);
-	for (int i = 1; i <= E; i++)
-	{
-		cin >> a >> b >> c;
-		v[a].push_back({ b,c });
-		v[b].push_back({ a,c });
+int main() {
+	cin.tie(NULL);
+	cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
+	cin >> V >> E;
+	for (int i = 1; i <= V; i++) parent[i] = i;
+	for (int i = 1; i <= E; i++) {
+		int s, e, w;
+		cin >> s >> e >> w;
+		pq.push({ w, {s, e} });
 	}
-	prim(1);
-	printf("%d\n", sum - M);
+	kruskal();
+	cout << ans - Max;
 	return 0;
 }
