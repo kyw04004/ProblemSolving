@@ -1,19 +1,18 @@
 #include<iostream>
+#include<map>
+#include<queue>
 #include<cstring>
 #include<string>
 #include<algorithm>
-#include<vector>
-#include<cmath>
-#include<queue>
 #include<functional>
+#include<vector>
 #include<stack>
-#include<map>
-#include<bitset>
+#include<cmath>
 using namespace std;
-typedef long long ll;
+typedef unsigned long long ll;
 vector<int> v;
-vector<int> Maxv [500005];
-int arr[8005],Max=1;
+vector<int> Maxv[500005];
+int arr[8005], Max = 1;
 double sum;
 int main() {
 	cin.tie(NULL);
@@ -29,13 +28,14 @@ int main() {
 	for (int i = 0; i <= 8000; i++) {
 		if (arr[i] >= Max) {
 			Max = arr[i]; //갯수
-			Maxv[Max].push_back(i-4000);//숫자
+			Maxv[Max].push_back(i - 4000);//숫자
 		}
 	}
 	sort(v.begin(), v.end());
 	cout << fixed;
 	cout.precision(0);
-	cout << sum / n << '\n';
+	if (sum < 0 && sum*10/2 >= -5) cout << 0 << '\n';
+	else cout << sum / n << '\n';
 	cout << v[n / 2] << '\n';
 	if (Maxv[Max].size() >= 2) {
 		sort(Maxv[Max].begin(), Maxv[Max].end());
